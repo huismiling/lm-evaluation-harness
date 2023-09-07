@@ -22,7 +22,7 @@ class HFLM(BaseLM):
 
     def __init__(
         self,
-        device="cuda",
+        device="mlu",
         pretrained="gpt2",
         revision="main",
         low_cpu_mem_usage=None,
@@ -66,17 +66,17 @@ class HFLM(BaseLM):
             # Initialize device
             assert isinstance(device, str)
             device_list = set(
-                ["cuda", "cpu"] + [f"cuda:{i}" for i in range(torch.cuda.device_count())]
+                ["mlu", "cpu"] + [f"mlu:{i}" for i in range(torch.mlu.device_count())]
             )
             if device and device in device_list:
                 self._device = torch.device(device)
                 print(f"Using device '{device}'")
             else:
                 print("Device not specified")
-                print(f"Cuda Available? {torch.cuda.is_available()}")
+                print(f"mlu Available? {torch.mlu.is_available()}")
                 self._device = (
-                    torch.device("cuda")
-                    if torch.cuda.is_available()
+                    torch.device("mlu")
+                    if torch.mlu.is_available()
                     else torch.device("cpu")
                 )
             revision = revision + ("/" + subfolder if subfolder is not None else "")
